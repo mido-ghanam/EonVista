@@ -1,0 +1,74 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EvoVista - Settings</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body { margin: 0; font-family: Arial, sans-serif; background-color: #f0f2f5; }
+        .header { background-color: #1877f2; color: white; display: flex; justify-content: space-between; align-items: center; padding: 10px 20px; }
+        .header .logo { font-size: 24px; font-weight: bold; }
+        .header .search-bar { flex-grow: 1; margin: 0 20px; }
+        .header .search-bar input { width: 100%; padding: 8px; border-radius: 20px; border: none; outline: none; }
+        .navbar { display: flex; justify-content: center; background-color: #1877f2; padding: 10px; }
+        .navbar a { color: white; text-decoration: none; margin: 0 15px; font-size: 16px; cursor: pointer; display: flex; align-items: center; }
+        .navbar a.active { font-weight: bold; text-decoration: underline; }
+        .navbar a i { margin-right: 8px; }
+        .main-content { padding: 20px; }
+        .settings-section { background-color: white; border-radius: 8px; padding: 20px; margin-bottom: 20px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); }
+        .settings-section h2 { margin-top: 0; }
+        .settings-section label { display: block; margin: 10px 0 5px; font-weight: bold; }
+        .settings-section input, .settings-section select { width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; margin-bottom: 10px; }
+        .settings-section button { padding: 10px 20px; background-color: #1877f2; color: white; border: none; border-radius: 4px; cursor: pointer; }
+        .settings-section button:hover { background-color: #165dbb; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo">EvoVista</div>
+        <form method="GET" action="search" class="search-bar">
+            <input name="q" type="text" placeholder="Search...">
+        </form>
+    </div>
+    <div class="navbar">
+        <a href="{% url 'home' %}" data-section="home"><i class="fas fa-home"></i></a>
+        <a href="#" data-section="friends"><i class="fas fa-user-friends"></i></a>
+        <a href="#" data-section="alerts"><i class="fas fa-bell"></i></a>
+        <a href="#" data-section="account" class="active"><i class="fas fa-cogs"></i></a>
+    </div>
+    <div class="main-content" id="main-content">
+        <h3>Settings</h3>
+        <div class="settings-section">
+            <h2>Account Settings</h2>
+            <form action="updateSettings" method="POST">
+                {% csrf_token %}
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username" value="{{ user.username }}" required>
+
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" value="{{ user.email }}" required>
+
+                <label for="password">New Password:</label>
+                <input type="password" id="password" name="password">
+
+                <label for="confirm_password">Confirm New Password:</label>
+                <input type="password" id="confirm_password" name="confirm_password">
+
+                <label for="language">Language:</label>
+                <select id="language" name="language">
+                    <option value="en">English</option>
+                    <option value="ar">Arabic</option>
+                    <option value="es">Spanish</option>
+                </select>
+
+                <button type="submit">Save Changes</button>
+            </form>
+        </div>
+      <div>
+        
+      </div>
+    </div>
+</body>
+</html>

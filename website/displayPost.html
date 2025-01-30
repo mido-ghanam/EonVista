@@ -1,0 +1,95 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ post.publisher_name }} - Post Details</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body { margin: 0; font-family: Arial, sans-serif; background-color: #f0f2f5; }
+        .header { background-color: #1877f2; color: white; display: flex; justify-content: space-between; align-items: center; padding: 10px 20px; }
+        .header .logo { font-size: 24px; font-weight: bold; }
+        .header .search-bar { flex-grow: 1; margin: 0 20px; }
+        .header .search-bar input { width: 100%; padding: 8px; border-radius: 20px; border: none; outline: none; }
+        .navbar { display: flex; justify-content: center; background-color: #1877f2; padding: 10px; }
+        .navbar a { color: white; text-decoration: none; margin: 0 15px; font-size: 16px; cursor: pointer; display: flex; align-items: center; }
+        .navbar a.active { font-weight: bold; text-decoration: underline; }
+        .navbar a i { margin-right: 8px; }
+        .main-content { padding: 20px; max-width: 1000px; margin: 0 auto; }
+        .post { background-color: white; border-radius: 8px; padding: 20px; margin-bottom: 20px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); }
+        .post-meta { display: flex; align-items: center; color: #606770; font-size: 14px; }
+        .post-meta img { width: 40px; height: 40px; border-radius: 50%; margin-right: 10px; }
+        .post-meta span { margin-right: 10px; }
+        .post-actions { display: flex; justify-content: space-between; margin-top: 15px; border-top: 1px solid #ddd; padding-top: 10px; }
+        .post-actions button { background: none; border: none; cursor: pointer; font-size: 16px; color: #606770; display: flex; align-items: center; gap: 5px; }
+        .post-actions button i { font-size: 18px; color: #606770; }
+        .post-actions button:hover i { color: #1877f2; }
+        .comments-section { margin-top: 20px; }
+        .comments-section .comment { margin-bottom: 10px; padding: 10px; border: 1px solid #ddd; border-radius: 8px; display: flex; align-items: flex-start; gap: 10px; position: relative; }
+        .comment img { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; }
+        .comment .comment-body { max-width: 90%; }
+        .comment .comment-meta { font-size: 12px; color: #606770; margin-top: 5px; }
+        .comment-input-wrapper { display: flex; align-items: center; gap: 10px; margin-top: 10px; }
+        .comment-input-wrapper input { flex-grow: 1; padding: 10px; border-radius: 20px; border: 1px solid #ddd; outline: none; font-size: 14px; }
+        .comment-input-wrapper button { background-color: #1877f2; color: white; border: none; padding: 8px 15px; border-radius: 20px; cursor: pointer; font-size: 14px; }
+        .comment-input-wrapper button:hover { background-color: #1567c7; }
+        .comment .comment-meta h4 { font-size: 14px; font-weight: normal; margin: 0; padding: 0; }
+        .comment .comment-meta { margin-left: 10px; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo">EvoVista</div>
+        <form method="GET" action="search" class="search-bar">
+            <input name="q" type="text" placeholder="Search...">
+        </form>
+    </div>
+    <div class="navbar">
+        <a href="{% url 'home' %}" data-section="home" class="active"><i class="fas fa-home"></i></a>
+        <a href="#" data-section="friends"><i class="fas fa-user-friends"></i></a>
+        <a href="#" data-section="alerts"><i class="fas fa-bell"></i></a>
+        <a href="{% url 'settings' %}" data-section="account"><i class="fas fa-cogs"></i></a>
+    </div>
+    <div class="main-content">
+        <div class="post">
+            <div class="post-meta">
+                <img src="{% static 'imgs/unknownuser.png' %}" alt="User Photo">
+                <span>{{ post.publisher_name }}</span>
+                <span>{{ post.created_at }}</span>
+            </div>
+            <p>{{ post.body }}</p>
+            <div class="post-actions">
+                <button><i class="fas fa-thumbs-up"></i> Like</button>
+                <button><i class="fas fa-share"></i> Share</button>
+                <button><i class="fas fa-comment"></i> Comment</button>
+            </div>
+        </div>
+        <div class="comments-section">
+            <form action="/home/addComment" method="POST" class="comment-form" accept-charset="utf-8">
+                {% csrf_token %}
+                <input type="hidden" name="post_id" value="{{ post.id }}" />
+                <div class="comment-input-wrapper">
+                    <input placeholder="Write a comment..." name="comment_body" required />
+                    <button type="submit">Post</button>
+                </div>
+            </form>
+            <br><br>
+            <div class="comments-list">
+                {% for comment in comments %}
+                    <div class="comment">
+                        <img src="{% static 'imgs/unknownuser.png' %}" alt="User Photo">
+                        <div>
+                            <div class="comment-meta">
+                                <span>{{ comment.user.username }} - {{comment.created_at}} </span>
+                            </div><br>
+                            <div class="comment-body">{{ comment.body }}</div>
+                        </div>
+                    </div>
+                    <br>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,127 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EvoVista - Post Details</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body { margin: 0; font-family: Arial, sans-serif; background-color: #f0f2f5; }
+        .header { background-color: #1877f2; color: white; display: flex; justify-content: space-between; align-items: center; padding: 10px 20px; }
+        .header .logo { font-size: 24px; font-weight: bold; }
+        .header .search-bar { flex-grow: 1; margin: 0 20px; }
+        .search-bar input { width: 100%; padding: 8px; border-radius: 20px; border: none; outline: none; }
+        .navbar { display: flex; justify-content: center; background-color: #1877f2; padding: 10px; }
+        .navbar a { color: white; text-decoration: none; margin: 0 15px; font-size: 16px; cursor: pointer; display: flex; align-items: center; }
+        .navbar a.active { font-weight: bold; text-decoration: underline; }
+        .navbar a i { margin-right: 8px; }
+        .main-content { padding: 20px; }
+        .post, .create-post { background-color: white; border-radius: 8px; padding: 20px; margin-bottom: 20px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); }
+        .post h2 { margin-top: 0; }
+        .post p { margin: 10px 0; }
+        .post .post-meta { display: flex; align-items: center; color: #606770; font-size: 14px; }
+        .post .post-meta img { width: 40px; height: 40px; border-radius: 50%; margin-right: 10px; }
+        .post-actions { display: flex; justify-content: space-around; margin-top: 15px; border-top: 1px solid #ddd; padding-top: 10px; }
+        .post-actions button { background: none; border: none; cursor: pointer; font-size: 16px; color: #606770; display: flex; align-items: center; gap: 5px; }
+        .post-actions button i { font-size: 18px; color: #606770; }
+        .post-actions button:hover i { color: #1877f2; }
+        .comments-section { margin-top: 10px; }
+        .comment { margin-bottom: 10px; padding: 10px; border: 1px solid #ddd; border-radius: 8px; display: flex; align-items: flex-start; gap: 10px; background-color: #f9f9f9; }
+        .comment img { width: 40px; height: 40px; border-radius: 50%; }
+        .comment .comment-body { max-width: calc(100% - 50px); }
+        .comment .comment-author { font-weight: bold; font-size: 14px; }
+        .comment .comment-time { font-size: 12px; color: gray; margin-top: 5px; }
+        .comment .comment-text { margin-top: 5px; }
+        .addComment_input { width: 100%; padding: 8px; border-radius: 20px; border: 1px solid #ddd; outline: none; }
+        .show-more-comments { color: #1877f2; cursor: pointer; font-size: 14px; margin-top: 10px; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo">EvoVista</div>
+        <form method="GET" action="search" class="search-bar">
+            <input name="q" type="text" placeholder="Search...">
+        </form>
+    </div>
+    <div class="navbar">
+        <a href="#" data-section="home" class="active"><i class="fas fa-home"></i></a>
+        <a href="#" data-section="friends"><i class="fas fa-user-friends"></i></a>
+        <a href="#" data-section="alerts"><i class="fas fa-bell"></i></a>
+        <a href="{% url 'settings' %}" data-section="account"><i class="fas fa-cogs"></i></a>
+    </div>
+    <div class="main-content" id="main-content">
+        <h3>Welcome, {{user.first_name}}</h3>
+        <div class="create-post">
+            <button onclick="togglePostForm()" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 20px; background-color: #f0f2f5; font-size: 16px; color: #606770;">What's on your mind?</button>
+            <form action="addPost" method="POST" id="post-form" style="display: none; margin-top: 10px;">
+                {% csrf_token %}
+                {% for m in messages %}
+                <h3 class="alert">{{m}}</h3>
+                {% endfor %}
+                <input id="new-post-content" name="postbody" placeholder="Write something..." style="width: 95%; padding: 10px; border: 1px solid #ddd; border-radius: 8px;"/>
+                <button onclick="addPost()" style="margin-top: 10px; padding: 10px; background-color: #1877f2; color: white; border: none; border-radius: 8px; cursor: pointer;">Post</button>
+            </form>
+        </div>
+        {% for post in feeds %}
+        <div class="post" data-post-id="{{post.id}}">
+            <div class="post-meta">
+                <img src="{% static 'imgs/unknownuser.png' %}" alt="User Photo">
+                <div>
+                    <span>{{post.publisher.first_name}} {{post.publisher.last_name}}</span>
+                    <span>{{ post.created_at }}</span>
+                </div>
+            </div>
+            <br>
+            <p>{{post.body}}</p>
+            <div class="post-actions">
+                <button><i class="fas fa-thumbs-up"></i> Like</button>
+                <button onclick="toggleComments({{post.id}})"><i class="fas fa-comment"></i> Comment</button>
+                <button onclick="copyShareLink({{post.id}})"><i class="fas fa-share"></i> Share</button>
+            </div>
+            <div id="comments-{{post.id}}" class="comments-section" style="display: none;">
+                <form action="addComment" method="POST" style="margin-bottom: 10px;">
+                    {% csrf_token %}
+                    <input type="hidden" name="post_id" value="{{post.id}}">
+                    <input type="text" class="addComment_input" name="comment_body" placeholder="Write a comment..." required/>
+                </form>
+                {% for comment in comments %}
+                {% if comment.post_id == post.id %}
+                <div class="comment">
+                    <img src="{% static 'imgs/unknownuser.png' %}" alt="User Photo">
+                    <div class="comment-body">
+                        <div class="comment-author">{{ comment.user.first_name }} {{ comment.user.last_name }}</div>
+                        <div class="comment-time">{{ comment.created_at }}</div>
+                        <div class="comment-text">{{ comment.body }}</div>
+                    </div>
+                </div>
+                {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    <script>
+        function togglePostForm() {
+            const form = document.getElementById('post-form');
+            form.style.display = form.style.display === 'none' ? 'block' : 'none';
+        }
+
+        function addPost() {
+            const content = document.getElementById('new-post-content').value;
+            if (content.trim() === '') return alert('Post content cannot be empty');
+            document.getElementById('post-form').submit();
+        }
+
+        function toggleComments(postId) {
+            const section = document.getElementById(`comments-${postId}`);
+            section.style.display = section.style.display === 'block' ? 'none' : 'block';
+        }
+
+        function copyShareLink(postId) {
+            const link = `${window.location.origin}/post/${postId}`;
+            navigator.clipboard.writeText(link).then(() => alert('Link copied to clipboard!'));
+        }
+    </script>
+</body>
+</html>

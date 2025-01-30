@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to EvoVista</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f0f2f5;
+            color: #333;
+            padding-top: 60px;
+        }
+        a{
+          text-decoration: none;
+          font-weight: bold;
+        }
+        .header {
+            padding: 10px 20px;
+            background-color: #1877f2;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+        .header .logo {
+            font-size: 24px;
+            font-weight: bold;
+        }
+        .header .menu-icon {
+            display: flex;
+            flex-direction: column;
+            cursor: pointer;
+        }
+        .header .menu-icon span {
+            width: 25px;
+            height: 3px;
+            background-color: white;
+            margin: 4px 0;
+            transition: 0.4s;
+        }
+        .nav-links {
+            display: flex;
+            gap: 15px;
+        }
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-size: 16px;
+        }
+        @media (max-width: 768px) {
+            .header {
+                padding: 5px;
+            }
+            .nav-links {
+                display: none;
+                flex-direction: column;
+                position: absolute;
+                top: 50px;
+                right: 10px;
+                background-color: #1877f2;
+                padding: 10px;
+                border-radius: 5px;
+            }
+            .nav-links.active {
+                display: flex;
+            }
+            .header .menu-icon.active span:nth-child(1) {
+                transform: rotate(-45deg) translate(-5px, 6px);
+            }
+            .header .menu-icon.active span:nth-child(2) {
+                opacity: 0;
+            }
+            .header .menu-icon.active span:nth-child(3) {
+                transform: rotate(45deg) translate(-5px, -6px);
+            }
+            .main-content {
+                padding: 80px 10px 20px;
+            }
+            .main-content h1 {
+                font-size: 24px;
+            }
+            .main-content p {
+                font-size: 14px;
+            }
+            .login-signup {
+                flex-direction: row;
+                gap: 10px;
+            }
+            .login-signup a {
+                width: auto;
+                padding: 8px 16px;
+                font-size: 14px;
+            }
+            .features {
+                flex-direction: column;
+                align-items: center;
+            }
+            .feature {
+                width: 90%;
+                padding: 10px;
+            }
+            .feature h2 {
+                font-size: 18px;
+            }
+            .feature p {
+                font-size: 12px;
+            }
+        }
+        .main-content {
+            padding: 20px;
+            text-align: center;
+        }
+        .main-content h1 {
+            font-size: 28px;
+            margin-bottom: 15px;
+        }
+        .main-content p {
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+        .login-signup {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+        .login-signup a {
+            padding: 8px 16px;
+            background-color: #1877f2;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        .login-signup a:hover {
+            background-color: #145dbf;
+        }
+        .features {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        .feature {
+            background-color: white;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 200px;
+            text-align: center;
+        }
+        .feature h2 {
+            font-size: 20px;
+            margin-bottom: 8px;
+            color: #1877f2;
+        }
+        .feature p {
+            font-size: 14px;
+        }
+        .footer {
+            background-color: #1877f2;
+            color: white;
+            text-align: center;
+            padding: 8px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo">EvoVista</div>
+        <div class="menu-icon" onclick="toggleMenu()">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+        <div class="nav-links">
+            <a href="#about">About Us</a>
+            <a href="#features">Features</a>
+            <a href="#login">Login</a>
+            <a href="#contact">Contact</a>
+        </div>
+    </div>
+    <div class="main-content">
+        <h1>Welcome to EvoVista</h1>
+        <p>Your gateway to a new social experience. Connect, share, and explore with friends and family.</p>
+        <div class="login-signup">
+            <a href="login/">Login</a>
+            <a href="login/">Sign Up</a>
+        </div>
+        <div id="features" class="features">
+            <div class="feature">
+                <h2>Connect</h2>
+                <p>Stay connected with your friends and family through our seamless messaging and sharing platform.</p>
+            </div>
+            <div class="feature">
+                <h2>Share</h2>
+                <p>Share your moments and memories through posts, photos, and videos with ease.</p>
+            </div>
+            <div class="feature">
+                <h2>Explore</h2>
+                <p>Discover new friends and join communities that match your interests.</p>
+            </div>
+        </div>
+    </div>
+    <div class="footer">
+        &copy; 2025 EvoVista. All rights reserved.
+    </div>
+    <script>
+        function toggleMenu() {
+            const menuIcon = document.querySelector('.menu-icon');
+            const navLinks = document.querySelector('.nav-links');
+            menuIcon.classList.toggle('active');
+            navLinks.classList.toggle('active');
+        }
+        document.addEventListener('click', function(event) {
+            const menuIcon = document.querySelector('.menu-icon');
+            const navLinks = document.querySelector('.nav-links');
+            if (!menuIcon.contains(event.target) && !navLinks.contains(event.target)) {
+                menuIcon.classList.remove('active');
+                navLinks.classList.remove('active');
+            }
+        });
+    </script>
+</body>
+</html>

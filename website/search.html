@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <title>نتائج البحث</title>
+</head>
+<body>
+    <h1>نتائج البحث عن: "{{ query }}"</h1>
+
+    <h2>المستخدمون</h2>
+    {% if results.users %}
+        <ul>
+            {% for user in results.users %}
+                <li>{{ user.username }} - {{ user.first_name }} {{ user.last_name }}</li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>لا توجد نتائج للمستخدمين.</p>
+    {% endif %}
+
+    <h2>الجروبات</h2>
+    {% if results.groups %}
+        <ul>
+            {% for group in results.groups %}
+                <li>{{ group.name }}</li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>لا توجد نتائج للجروبات.</p>
+    {% endif %}
+</body>
+</html>
